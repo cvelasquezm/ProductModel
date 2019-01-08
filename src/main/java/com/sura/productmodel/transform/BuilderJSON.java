@@ -21,7 +21,7 @@ public class BuilderJSON {
 
     public JsonElement xmlReader(){
         SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File( "C:/Guidewire/PolicyCenter/modules/configuration/config/resources/productmodel/policylinepatterns/CPLine/coveragepatterns/MRCTerremotoArtCov.xml" );
+        File xmlFile = new File( "C:/Guidewire/PolicyCenter/modules/configuration/config/resources/productmodel/policylinepatterns/IMLine/coveragepatterns/IMtodoRiesgoTCCov.xml" );
         try
         {
             BuildingCoverageDTO buildingCoverageDTO = new BuildingCoverageDTO();
@@ -41,19 +41,48 @@ public class BuilderJSON {
                 coverageDTO.publicID = publicId;
 
                 List<Element> directCovTermPatterns = covTerm.getChildren("DirectCovTermPattern");
+                List<Element> typekeyCovTermPatterns = covTerm.getChildren("TypekeyCovTermPattern");
 
                 List<TermsDTO> listTermsDTO = new ArrayList<>();
+
+                for (Element typekeyCovTermPattern : typekeyCovTermPatterns){
+
+                    boolean required = typekeyCovTermPattern.getAttributeValue("required").equals("true") ? true : false;
+                    TermsDTO termsDTO = new TermsDTO();
+                    if (true){
+                        termsDTO.required = true;
+                        termsDTO.updated = true;
+                        termsDTO.patternCode = typekeyCovTermPattern.getAttributeValue("codeIdentifier");
+                        termsDTO.chosenTerm = typekeyCovTermPattern.getAttributeValue("defaultValue");
+                        listTermsDTO.add(termsDTO);
+                    }
+
+                }
+
+
                 for (Element directCovTermPattern : directCovTermPatterns) {
                     boolean required = directCovTermPattern.getAttributeValue("required").equals("true") ? true : false;
+                    String defaultLimitValue = "";
+                    List<Element> limitsSet = directCovTermPattern.getChildren("LimitsSet");
+                    if (limitsSet.size() > 0){
+                        List<Element> covTermLimits = limitsSet.get(0).getChildren("CovTermLimits");
+                        if (covTermLimits.size() > 0){
+                            defaultLimitValue = covTermLimits.get(0).getAttributeValue("defaultValue");
+                        }
+                    }
+
+                    System.out.println(defaultLimitValue);
+
                     TermsDTO termsDTO = new TermsDTO();
-                    if (required) {
+                    if (true) {
                         termsDTO.required = true;
                         termsDTO.updated = true;
                         termsDTO.patternCode = directCovTermPattern.getAttributeValue("codeIdentifier");
+
                         String coverageColumn = directCovTermPattern.getAttributeValue("coverageColumn");
                         if (coverageColumn.startsWith("DirectTerm")) {
                             String valueType = directCovTermPattern.getAttributeValue("valueType");
-                            termsDTO.directValue = getDefaultValue(valueType);
+                            termsDTO.directValue = defaultLimitValue.trim().equalsIgnoreCase("") ? getDefaultValue(valueType) : defaultLimitValue;
                         } else if (coverageColumn.startsWith("ChoiceTerm")) {
                             termsDTO.chosenTerm = directCovTermPattern.getAttributeValue("defaultValue");
                         }
