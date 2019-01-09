@@ -19,9 +19,9 @@ public class BuilderJSON {
 
     Gson gson = new Gson();
 
-    public JsonElement xmlReader(){
+    public JsonElement xmlReader(String url, String file){
         SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File( "C:/Guidewire/PolicyCenter/modules/configuration/config/resources/productmodel/policylinepatterns/IMLine/coveragepatterns/IMtodoRiesgoTCCov.xml" );
+        File xmlFile = new File( url + file );
         try
         {
             BuildingCoverageDTO buildingCoverageDTO = new BuildingCoverageDTO();
@@ -70,8 +70,6 @@ public class BuilderJSON {
                             defaultLimitValue = covTermLimits.get(0).getAttributeValue("defaultValue");
                         }
                     }
-
-                    System.out.println(defaultLimitValue);
 
                     TermsDTO termsDTO = new TermsDTO();
                     if (true) {
