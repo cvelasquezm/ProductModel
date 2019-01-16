@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/triologygmbh/jenkinsfile'
+                git 'https://github.com/cvelasquezm/ProductModel/blob/master/Jenkinsfile'
             }
         }
 
