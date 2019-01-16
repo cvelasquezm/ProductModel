@@ -11,6 +11,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +23,16 @@ public class BuilderJSON {
     public JsonElement xmlReader(String url, String file){
         SAXBuilder builder = new SAXBuilder();
         File xmlFile = new File( url + file );
-        try
-        {
+        try {
             BuildingCoverageDTO buildingCoverageDTO = new BuildingCoverageDTO();
-            Document document = (Document) builder.build( xmlFile );
+            Document document = (Document) builder.build(xmlFile);
             Element rootNode = document.getRootElement();
             String publicId = rootNode.getAttributeValue("public-id");
             String coverageCategory = rootNode.getAttributeValue("coverageCategory");
 
             buildingCoverageDTO.coverageCategory = coverageCategory;
 
-            List<Element> covTerms = rootNode.getChildren( "CovTerms" );
+            List<Element> covTerms = rootNode.getChildren("CovTerms");
             List<CoverageDTO> listCoverageDTO = new ArrayList<CoverageDTO>();
             for (Element covTerm : covTerms) {
                 CoverageDTO coverageDTO = new CoverageDTO();
@@ -45,11 +45,11 @@ public class BuilderJSON {
 
                 List<TermsDTO> listTermsDTO = new ArrayList<>();
 
-                for (Element typekeyCovTermPattern : typekeyCovTermPatterns){
+                for (Element typekeyCovTermPattern : typekeyCovTermPatterns) {
 
                     boolean required = typekeyCovTermPattern.getAttributeValue("required").equals("true") ? true : false;
                     TermsDTO termsDTO = new TermsDTO();
-                    if (true){
+                    if (true) {
                         termsDTO.required = true;
                         termsDTO.updated = true;
                         termsDTO.patternCode = typekeyCovTermPattern.getAttributeValue("codeIdentifier");
@@ -64,9 +64,9 @@ public class BuilderJSON {
                     boolean required = directCovTermPattern.getAttributeValue("required").equals("true") ? true : false;
                     String defaultLimitValue = "";
                     List<Element> limitsSet = directCovTermPattern.getChildren("LimitsSet");
-                    if (limitsSet.size() > 0){
+                    if (limitsSet.size() > 0) {
                         List<Element> covTermLimits = limitsSet.get(0).getChildren("CovTermLimits");
-                        if (covTermLimits.size() > 0){
+                        if (covTermLimits.size() > 0) {
                             defaultLimitValue = covTermLimits.get(0).getAttributeValue("defaultValue");
                         }
                     }
@@ -92,10 +92,11 @@ public class BuilderJSON {
             }
             buildingCoverageDTO.coverages = ListToArrayCoverageDTO(listCoverageDTO);
             return gson.toJsonTree(buildingCoverageDTO);
-
-        }catch ( IOException io ) {
+        } catch (FileNotFoundException e){
+            System.out.println(e.getMessage());
+        } catch ( IOException io ) {
             System.out.println( io.getMessage() );
-        }catch ( JDOMException jdomex ) {
+        } catch ( JDOMException jdomex ) {
             System.out.println( jdomex.getMessage() );
         }
         return null;
