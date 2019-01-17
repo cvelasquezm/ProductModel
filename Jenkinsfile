@@ -14,13 +14,13 @@ pipeline {
 
         stage('Build') {
             steps {                
-				bat 'mvn install:install-file -Dfile=D:/productmodel/build'
+		bat 'mvn install:install-file -Dfile=D:/productmodel/build/produtModel.jar'
             }
         }
 		
-		stage('Deploy') {
+	stage('Deploy') {
             steps {                
-				bat 'echo "hola mundo"'
+		bat 'echo "hola mundo"'
             }
         }
     }
