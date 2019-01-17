@@ -13,9 +13,14 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                bat 'cd D:/productmodel/build'
-				bat 'mvn clean install'
+            steps {                
+				bat 'mvn install:install-file -Dfile=D:/productmodel/build'
+            }
+        }
+		
+		stage('Deploy') {
+            steps {                
+				//Deploying....
             }
         }
     }
