@@ -14,7 +14,7 @@ pipeline {
 
         stage('Build') {
             steps {                
-		bat 'mvn install:install-file -Dfile=D:/productmodel/build/produtModel.jar'
+		bat 'mvn install:install-file -Dfile=D:/productmodel/build'
             }
         }
 		
