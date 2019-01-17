@@ -20,7 +20,7 @@ pipeline {
 		
 		stage('Deploy') {
             steps {                
-				//Deploying....
+				bat 'echo "hola mundo"'
             }
         }
     }
