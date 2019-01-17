@@ -14,7 +14,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'cd D:\productmodel\build'
+                bat 'cd D:/productmodel/build'
 				bat 'mvn clean install'
             }
         }
