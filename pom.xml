@@ -11,8 +11,8 @@
 	<groupId>com.sura</groupId>
 	<artifactId>productmodel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>productmodel</name>
 	<packaging>jar</packaging>
+	<name>productmodel</name>	
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -57,8 +57,7 @@
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-install-plugin</artifactId>
-			  <version>3.0.0-M1</version>
-			  <packaging>jar</packaging>
+			  <version>3.0.0-M1</version>			  
 			</plugin>
 		</plugins>
 	</build>
