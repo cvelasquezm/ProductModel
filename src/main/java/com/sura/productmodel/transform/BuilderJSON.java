@@ -20,7 +20,7 @@ public class BuilderJSON {
 
     Gson gson = new Gson();
 
-    public JsonElement xmlReader(String url, String file){
+    public JsonElement xmlReader(String url, String file, boolean onlyRequired){
         SAXBuilder builder = new SAXBuilder();
         File xmlFile = new File( url + file );
         try {
@@ -29,11 +29,11 @@ public class BuilderJSON {
             Element rootNode = document.getRootElement();
             String publicId = rootNode.getAttributeValue("public-id");
             String coverageCategory = rootNode.getAttributeValue("coverageCategory");
+            List<Element> covTerms = rootNode.getChildren("CovTerms");
+            List<CoverageDTO> listCoverageDTO = new ArrayList<CoverageDTO>();
 
             buildingCoverageDTO.coverageCategory = coverageCategory;
 
-            List<Element> covTerms = rootNode.getChildren("CovTerms");
-            List<CoverageDTO> listCoverageDTO = new ArrayList<CoverageDTO>();
             for (Element covTerm : covTerms) {
                 CoverageDTO coverageDTO = new CoverageDTO();
                 coverageDTO.updated = true;
@@ -62,29 +62,15 @@ public class BuilderJSON {
 
                 for (Element directCovTermPattern : directCovTermPatterns) {
                     boolean required = directCovTermPattern.getAttributeValue("required").equals("true") ? true : false;
-                    String defaultLimitValue = "";
-                    List<Element> limitsSet = directCovTermPattern.getChildren("LimitsSet");
-                    if (limitsSet.size() > 0) {
-                        List<Element> covTermLimits = limitsSet.get(0).getChildren("CovTermLimits");
-                        if (covTermLimits.size() > 0) {
-                            defaultLimitValue = covTermLimits.get(0).getAttributeValue("defaultValue");
-                            defaultLimitValue = defaultLimitValue == null ? "" : defaultLimitValue;
-                        }
-                    }
+                    String defaultLimitValue = getDefaultLimitValue(directCovTermPattern.getChildren("LimitsSet"));
 
                     TermsDTO termsDTO = new TermsDTO();
                     if (true) {
                         termsDTO.required = true;
                         termsDTO.updated = true;
                         termsDTO.patternCode = directCovTermPattern.getAttributeValue("codeIdentifier");
-
-                        String coverageColumn = directCovTermPattern.getAttributeValue("coverageColumn");
-                        if (coverageColumn.startsWith("DirectTerm")) {
-                            String valueType = directCovTermPattern.getAttributeValue("valueType");
-                            termsDTO.directValue = defaultLimitValue.trim().equalsIgnoreCase("") ? getDefaultValue(valueType) : defaultLimitValue;
-                        } else if (coverageColumn.startsWith("ChoiceTerm")) {
-                            termsDTO.chosenTerm = directCovTermPattern.getAttributeValue("defaultValue");
-                        }
+                        String valueType = directCovTermPattern.getAttributeValue("valueType");
+                        termsDTO.directValue = defaultLimitValue.trim().equalsIgnoreCase("") ? getDefaultValue(valueType) : defaultLimitValue;
                         listTermsDTO.add(termsDTO);
                     }
                 }
@@ -99,10 +85,23 @@ public class BuilderJSON {
             System.out.println( io.getMessage() );
         } catch ( JDOMException jdomex ) {
             System.out.println( jdomex.getMessage() );
+        } catch ( Exception e ) {
+            System.out.println( e.getMessage() );
         }
         return null;
     }
 
+    public String getDefaultLimitValue(List<Element> limitsSet){
+        String value = "";
+        if (limitsSet.size() > 0) {
+            List<Element> covTermLimits = limitsSet.get(0).getChildren("CovTermLimits");
+            if (covTermLimits.size() > 0) {
+                value = covTermLimits.get(0).getAttributeValue("defaultValue");
+                return value == null ? "" : value;
+            }
+        }
+        return value;
+    }
 
     public String toMoney(){
         return "100000";

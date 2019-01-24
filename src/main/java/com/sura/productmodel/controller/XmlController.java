@@ -16,7 +16,7 @@ public class XmlController {
     @PostMapping(value = "/coverages", produces = MediaType.APPLICATION_JSON_VALUE)
     public String xmlReader(@RequestBody RequestDTO requestDTO){
         BuilderJSON b = new BuilderJSON();
-        return b.xmlReader(requestDTO.url, requestDTO.file).toString();
+        return b.xmlReader(requestDTO.url, requestDTO.file, requestDTO.onlyRequired).toString();
     }
 
 }

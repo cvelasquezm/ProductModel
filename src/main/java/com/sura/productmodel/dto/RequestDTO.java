@@ -8,4 +8,6 @@ public class RequestDTO {
     public String url;
     @JsonProperty
     public String file;
+    @JsonProperty
+    public boolean onlyRequired;
 }
