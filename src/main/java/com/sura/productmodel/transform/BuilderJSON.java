@@ -68,6 +68,7 @@ public class BuilderJSON {
                         List<Element> covTermLimits = limitsSet.get(0).getChildren("CovTermLimits");
                         if (covTermLimits.size() > 0) {
                             defaultLimitValue = covTermLimits.get(0).getAttributeValue("defaultValue");
+                            defaultLimitValue = defaultLimitValue == null ? "" : defaultLimitValue;
                         }
                     }
 

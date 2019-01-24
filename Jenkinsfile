@@ -14,13 +14,14 @@ pipeline {
 
         stage('Build') {
             steps {                
-				bat 'mvn install:install-file -Dfile=D:/productmodel/build'
+				//bat 'mvn install:install-file -Dfile=D:/productmodel/build'
+				bat 'mvn clean install'
             }
         }
 		
 		stage('Deploy') {
             steps {                
-				bat 'echo "hola mundo"'
+				bat 'java -jar C:/Users/cesavemr/.m2/repository/com/sura/productmodel/0.0.1-SNAPSHOT/productmodel-0.0.1-SNAPSHOT.jar'
             }
         }
     }
